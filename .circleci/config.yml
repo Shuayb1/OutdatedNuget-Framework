@@ -35,9 +35,9 @@ jobs:
           command: |
             $Exclude = Get-Content ignore.txt
             echo $Exclude
-            nukeeper inspect --exclude $Exclude >> ~/logs/nukeeper.txt
+            nukeeper inspect --exclude $Exclude > ~/logs/nukeeper.txt
             Get-Content ~/logs/nukeeper.txt
-            $SEL = select-string -path "~/logs/nukeeper.txt" -pattern "^0 possible"
+            $SEL = select-string -path "~/logs/nukeeper.txt" -pattern "0 possible"
             if ($SEL -ne $null)
             {
                 echo "Packages are NOT UPTODATE"
