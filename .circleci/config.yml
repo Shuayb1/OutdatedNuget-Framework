@@ -25,7 +25,7 @@ jobs:
           command: |
             dotnet tool install nukeeper --global
             nukeeper inspect >> nukeeper.txt
-            echo nukeeper.txt       
+            Get-Content nukeeper.txt       
 
 workflows:
   default:
