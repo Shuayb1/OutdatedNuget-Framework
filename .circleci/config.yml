@@ -24,8 +24,14 @@ jobs:
           name: Install nukeeper 
           command: |
             dotnet tool install nukeeper --global
-            nukeeper inspect >> nukeeper.txt
-            Get-Content nukeeper.txt       
+            mkdir -p ~/logs/
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: nukeeper inspect
+          command: |
+            nukeeper inspect >> ~/logs/nukeeper.txt
+            Get-Content ~/logs/nukeeper.txt       
 
 workflows:
   default:
