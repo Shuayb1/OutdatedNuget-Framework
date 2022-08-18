@@ -7,7 +7,7 @@ orbs:
   win: circleci/windows@2.2.0
 
 jobs:
-  build: # name of your job
+  hello: # name of your job
     executor: win/default # executor type
 
     steps:
@@ -15,3 +15,21 @@ jobs:
       # virtual machine environment
       - checkout
       - run: Write-Host 'Hello, Windows'
+  
+  nukeeper:
+    executor: win/default
+    steps:
+      - checkout
+      - run:
+          name: Install nukeeper 
+          command: |
+            dotnet tool install nukeeper --global
+            nukeeper inspect >> nukeeper.txt
+            echo nukeeper.txt       
+
+workflows:
+  default:
+    jobs:
+      - hello
+      - nukeeper
+          requires: [hello]
