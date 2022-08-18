@@ -21,26 +21,29 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install nukeeper 
+          name: Install nukeeper and create logfile directory
           command: |
             dotnet tool install nukeeper --global
             mkdir -p ~/logs/
       - attach_workspace:
           at: ~/
       - run:
-          name: nukeeper inspect
+          name: nukeeper inspect 
+          # 1. nukeeper inspects the .csproj or .sln file in this current direcory and write the output to a file
+          # 2. reading the content of the logfile
+          # 3. checking if the logfile specify any possible package(s) that needs update, then returning error if there is possible update, and no error if no update
           command: |
             nukeeper inspect >> ~/logs/nukeeper.txt
             Get-Content ~/logs/nukeeper.txt
             $SEL = select-string -path ~/logs/nukeeper.txt -pattern "0 possible"
             if ($SEL -ne $null)
             {
-                echo Packages are NOT UPTODATE
+                echo "Packages are NOT UPTODATE"
                 exit 1
             }
             else
             {
-                echo Packages are UPTODATE
+                echo "Packages are UPTODATE"
                 exit 0
             }
 
