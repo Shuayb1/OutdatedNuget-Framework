@@ -41,12 +41,12 @@ jobs:
             if ($SEL -ne $null)
             {
                 echo "Packages are NOT UPTODATE"
-                exit 0
+                exit 1
             }
             else
             {
                 echo "Packages are UPTODATE"
-                exit 1
+                exit 0
             }
 
 workflows:
