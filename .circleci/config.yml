@@ -31,7 +31,18 @@ jobs:
           name: nukeeper inspect
           command: |
             nukeeper inspect >> ~/logs/nukeeper.txt
-            Get-Content ~/logs/nukeeper.txt       
+            Get-Content ~/logs/nukeeper.txt
+            $SEL = select-string -path ~/logs/nukeeper.txt -pattern "0 possible"
+            if ($SEL -ne $null)
+            {
+                echo Contains NO package to update
+                exit 0
+            }
+            else
+            {
+                echo Contains PACKAGES to UPDATE
+                exit 1
+            }
 
 workflows:
   default:
