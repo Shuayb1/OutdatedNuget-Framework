@@ -35,13 +35,13 @@ jobs:
             $SEL = select-string -path ~/logs/nukeeper.txt -pattern "0 possible"
             if ($SEL -ne $null)
             {
-                echo Contains NO package to update
-                exit 0
+                echo Packages are NOT UPTODATE
+                exit 1
             }
             else
             {
-                echo Contains PACKAGES to UPDATE
-                exit 1
+                echo Packages are UPTODATE
+                exit 0
             }
 
 workflows:
