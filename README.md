@@ -3,8 +3,8 @@ Pipeline for Testing Outdated Nuget Package in .Net  Framework 4.8 using [Nukeep
 
 # Summary:
 
-    1. I usednukeeper inspects the .csproj or .sln file in the current direcory (or any specified project or solution directory) and write the output to a file
-    2. Read the content of the logfile 
+    1. I usednukeeper inspects the .csproj or .sln file in the current direcory (or any specified project or solution directory) and write the output to a file.
+    2. Read the content of the logfile.
     3. checking if the logfile specify any possible package(s) that needs update, then returned an error if there is possible update, and no error if no update.
 
 
