@@ -31,5 +31,5 @@ workflows:
   default:
     jobs:
       - hello
-      - nukeeper
+      - nukeeper:
           requires: [hello]
