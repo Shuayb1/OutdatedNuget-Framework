@@ -33,9 +33,8 @@ jobs:
             # 2. reading the content of the logfile
             # 3. checking if the logfile specify any possible package(s) that needs update, then returning error if there is possible update, and no error if no update
           command: |
-            $Exclude = Get-Content ignore.txt
-            echo $Exclude
-            $o = $Exclude -split '\r?\n|\r' | ForEach-Object { "$_" } join ("^|")
+            $File = 'ignore.txt'
+            $o = Get-Content $File | ForEach-Object {($_ -split '\r\n') -join '^|'}
             echo $o
             nukeeper inspect --exclude $Exclude > ~/logs/nukeeper.txt
             Get-Content ~/logs/nukeeper.txt
