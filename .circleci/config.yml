@@ -36,8 +36,8 @@ jobs:
             $splitfile = Get-Content 'ignore.txt' | ForEach-Object {($_ -split '\r?\n') }
             echo $splitfile
             $excludePackage = [String]::Join('^|', $splitfile)
-            nukeeper inspect --exclude $excludePackage > ~/logs/nukeeper.txt
-            nukeeper inspect --exclude $Exclude > ~/logs/nukeeper.txt
+            echo $excludePackages
+            nukeeper inspect --exclude $excludePackages > ~/logs/nukeeper.txt
             Get-Content ~/logs/nukeeper.txt
             $SEL = select-string -path "~/logs/nukeeper.txt" -pattern "^0 possible"
             if ($SEL -ne $null)
