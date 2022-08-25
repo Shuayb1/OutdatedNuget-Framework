@@ -32,11 +32,12 @@ jobs:
             # 1. nukeeper inspects the .csproj or .sln file in this current direcory and write the output to a file
             # 2. reading the content of the logfile
             # 3. checking if the logfile specify any possible package(s) that needs update, then returning error if there is possible update, and no error if no update
-          command: |
+          command: | 
             $splitfile = Get-Content 'ignore.txt' | ForEach-Object {($_ -split '\r?\n') }
             echo $splitfile
 		        $excludePackage s= [String]::Join('^|', $splitfile)
             nukeeper inspect --exclude $excludePackage > ~/logs/nukeeper.txt
+            nukeeper inspect --exclude $Exclude > ~/logs/nukeeper.txt
             Get-Content ~/logs/nukeeper.txt
             $SEL = select-string -path "~/logs/nukeeper.txt" -pattern "^0 possible"
             if ($SEL -ne $null)
