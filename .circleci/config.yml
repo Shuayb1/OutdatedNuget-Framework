@@ -33,30 +33,10 @@ jobs:
             # 2. reading the content of the logfile
             # 3. checking if the logfile specify any possible package(s) that needs update, then returning error if there is possible update, and no error if no update
           command: |
-            $Source = @"
-            public class BasicTest
-            {
-              public string ReadFromScriptFile()
-                    {
-
-                        var ignoreFile = 'ignore.txt';
-                        string ignorePackages = File.ReadAllText(ignoreFile);
-                        string[] lines = ignorePackages.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                        var excludeCommandFormat = String.Join("^|", lines);
-                        var excludeCommandOption = "(" + excludeCommandFormat + ")";
-                        return excludeCommandOption;
-
-
-                    }
-            }
-            "@
-
-            Add-Type -TypeDefinition $Source
-            [BasicTest]::ReadFromScriptFile()
-            $BasicTestObject = New-Object BasicTest
-            $O = $BasicTestObject.ReadFromScriptFile()
-            echo  $O
-            nukeeper inspect --exclude $Exclude > ~/logs/nukeeper.txt
+            $splitfile = Get-Content 'ignore.txt' | ForEach-Object {($_ -split '\r?\n') }
+            echo $splitfile
+		        $excludePackage s= [String]::Join('^|', $splitfile)
+            nukeeper inspect --exclude $excludePackage > ~/logs/nukeeper.txt
             Get-Content ~/logs/nukeeper.txt
             $SEL = select-string -path "~/logs/nukeeper.txt" -pattern "^0 possible"
             if ($SEL -ne $null)
