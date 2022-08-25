@@ -35,7 +35,7 @@ jobs:
           command: | 
             $splitfile = Get-Content 'ignore.txt' | ForEach-Object {($_ -split '\r?\n') }
             echo $splitfile
-            $excludePackage = [String]::Join('^|', $splitfile)
+            $excludePackages = [String]::Join('^|', $splitfile)
             echo $excludePackages
             nukeeper inspect --exclude $excludePackages > ~/logs/nukeeper.txt
             Get-Content ~/logs/nukeeper.txt
