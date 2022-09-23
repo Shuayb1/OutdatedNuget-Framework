@@ -33,23 +33,44 @@ jobs:
             # 2. reading the content of the logfile
             # 3. checking if the logfile specify any possible package(s) that needs update, then returning error if there is possible update, and no error if no update
           command: | 
-            $splitfile = Get-Content 'ignore.txt' | ForEach-Object {($_ -split '\r?\n') }
+            #$splitfile = Get-Content '%OutdatedNuGetPackagesToIgnore%' | ForEach-Object {($_ -split '\r?\n') }
+            $splitfile = ForEach-Object {('%OutdatedNuGetPackagesToIgnore%' -split ',') }
             echo $splitfile
             $excludePackages = [String]::Join('|^', $splitfile)
             echo $excludePackages
-            nukeeper inspect --exclude '($excludePackages)' > ~/logs/nukeeper.txt
-            Get-Content ~/logs/nukeeper.txt
-            $SEL = select-string -path "~/logs/nukeeper.txt" -pattern "^0 possible"
+
+            #mkdir logs
+            #nukeeper inspect --exclude $excludePackages > NuGetOutOfDate.html
+
+            $File = nukeeper inspect --exclude $excludePackages
+            $FileLine = @()
+            Foreach ($Line in $File) {
+             $MyObject = New-Object -TypeName PSObject
+             Add-Member -InputObject $MyObject -Type NoteProperty -Name rStats -Value $Line
+             $FileLine += $MyObject
+            }
+            $FileLine | ConvertTo-Html | Out-File NuGetOutOfDate.html
+
+            Get-Content NuGetOutOfDate.html
+
+            echo '##teamcity[file=NuGetOutOfDate.html]'
+
+            $SEL = select-string -path "NuGetOutOfDate.html" -pattern "^0 possible"
             if ($SEL -ne $null)
             {
-                echo "Packages are UPTODATE"
-                exit 0
+              echo "##teamcity[message text='Out-of-date NuGet packages not found']"
+              echo "Out-of-date NuGet packages not found"
+              #exit 0
             }
-            else
+            elseif ('%ErrorWhenPackagesOutOfDate%' -eq 'true')
             {
-                echo "Packages are NOT UPTODATE"
-                exit 1
+              echo "##teamcity[buildStatus status='Error' text='Out-of-date NuGet packages found']"
+              #echo "##teamcity[publishArtifacts 'NuGetOutOfDate.zip']"
+              echo "Out-of-date NuGet packages found"
+              #exit 1
             }
+            echo "##teamcity[publishArtifacts 'NuGetOutOfDate.html => NuGetOutOfDate.zip']"
+             }
 
 workflows:
   default:
